@@ -15,6 +15,6 @@ create table notas(
 );
 
 create table faltas(
-    email VARCHAR(60) NOT NULL,
+    email VARCHAR(60) NOT NULL UNIQUE,
     quantidade SMALLINT UNSIGNED NOT NULL
 );

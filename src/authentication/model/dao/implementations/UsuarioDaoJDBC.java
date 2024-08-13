@@ -60,9 +60,77 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             Usuario usuario = null;
 
-            if (rs.next()) usuario = instantiateUsuario(rs);
+            if (rs.next()) {
+                usuario = instantiateUsuario(rs);
+                usuario.setNotas(readNotas(email));
+                usuario.setFaltas(readFaltas(email));
+            }
 
             return usuario;
+
+        } catch (SQLException e) {
+
+            throw new DBException(e.getMessage());
+
+        } finally {
+
+            DB.closeStatement(stm);
+            DB.closeResultSet(rs);
+
+        }
+
+    }
+
+    private ArrayList<Float> readNotas(String email) {
+
+        String sqlSelect = "SELECT nota FROM notas WHERE email = ?";
+
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try{
+
+            stm = conn.prepareStatement(sqlSelect);
+            stm.setString(1, email);
+            rs = stm.executeQuery();
+
+            ArrayList<Float> notasLidas = new ArrayList<>();
+
+            while (rs.next()) notasLidas.add(rs.getFloat("nota"));
+
+            return notasLidas;
+
+        } catch (SQLException e) {
+
+            throw new DBException(e.getMessage());
+
+        } finally {
+
+            DB.closeStatement(stm);
+            DB.closeResultSet(rs);
+
+        }
+
+    }
+
+    private Integer readFaltas(String email) {
+
+        String sqlSelect = "SELECT falta FROM faltas WHERE email = ?";
+
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try{
+
+            stm = conn.prepareStatement(sqlSelect);
+            stm.setString(1, email);
+            rs = stm.executeQuery();
+
+            Integer faltasLidas = null;
+
+            if (rs.next()) faltasLidas = rs.getInt("falta");
+
+            return faltasLidas;
 
         } catch (SQLException e) {
 
