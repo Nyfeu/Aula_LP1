@@ -17,7 +17,7 @@ public class AuthenticationView extends JFrame {
     public AuthenticationView() {
         // Configurações da janela
         setTitle("Autenticação");
-        setSize(400, 300);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

@@ -21,7 +21,7 @@ public class DB {
 
     private static Properties loadProperties() {
 
-        try(FileInputStream fis = new FileInputStream("src/model/db/db.properties")) {
+        try(FileInputStream fis = new FileInputStream("src/authentication/db/db.properties")) {
 
             Properties props = new Properties();
             props.load(fis);

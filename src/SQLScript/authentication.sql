@@ -1,5 +1,5 @@
-create database authentication;
-use authentication;
+create database login_senha;
+use login_senha;
 create table usuario(
     nome VARCHAR(60) NOT NULL,
     email VARCHAR(60) NOT NULL,

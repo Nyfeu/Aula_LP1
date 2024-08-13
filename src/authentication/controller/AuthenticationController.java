@@ -68,6 +68,7 @@ public class AuthenticationController {
             System.out.println("Usuário Autenticado!");
             ViewUtils.closeView(view);
             // new MainView().setVisible(true);
+            JOptionPane.showMessageDialog(view,"Logado com sucesso!");
         } else {
             System.out.println("Falha na autenticação...");
         }
