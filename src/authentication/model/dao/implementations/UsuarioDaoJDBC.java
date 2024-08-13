@@ -115,7 +115,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private Integer readFaltas(String email) {
 
-        String sqlSelect = "SELECT falta FROM faltas WHERE email = ?";
+        String sqlSelect = "SELECT quantidade FROM faltas WHERE email = ?";
 
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -128,7 +128,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             Integer faltasLidas = null;
 
-            if (rs.next()) faltasLidas = rs.getInt("falta");
+            if (rs.next()) faltasLidas = rs.getInt("quantidade");
 
             return faltasLidas;
 

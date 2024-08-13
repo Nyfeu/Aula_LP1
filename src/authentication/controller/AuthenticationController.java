@@ -2,6 +2,7 @@ package authentication.controller;
 
 import authentication.utils.Authenticator;
 import authentication.view.AuthenticationView;
+import authentication.view.MainView;
 import authentication.view.Validator;
 import authentication.view.ViewUtils;
 
@@ -67,7 +68,8 @@ public class AuthenticationController {
         if (authenticated) {
             System.out.println("Usuário Autenticado!");
             ViewUtils.closeView(view);
-            // new MainView().setVisible(true);
+            MainView view1 = new MainView();
+            view1.makeWindow();
             JOptionPane.showMessageDialog(view,"Logado com sucesso!");
         } else {
             System.out.println("Falha na autenticação...");
