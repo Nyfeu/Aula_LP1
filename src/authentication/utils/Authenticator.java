@@ -86,6 +86,7 @@ public class Authenticator {
             usuario.setNotas(notas);
 
             usuario.setFaltas(0);
+            usuario.setLastModified();
 
             usuarioDao.create(usuario);
 

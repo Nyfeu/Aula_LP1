@@ -21,7 +21,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void create(Usuario usuario) {
 
-        String sqlInsert = "INSERT INTO usuario(nome, email, senha_hash) VALUES(?,?,?)";
+        String sqlInsert = "INSERT INTO usuario(nome, email, senha_hash, lastModified) VALUES(?,?,?,?)";
         PreparedStatement stm = null;
 
         try{
@@ -30,8 +30,8 @@ public class UsuarioDaoJDBC implements UsuarioDao {
             stm.setString(1, usuario.getNome());
             stm.setString(2, usuario.getEmail());
             stm.setString(3, usuario.getSenha());
+            stm.setTimestamp(4, usuario.getLastModified());
             stm.execute();
-
 
         } catch (SQLException e) {
 
@@ -48,7 +48,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public Usuario read(String email) {
 
-        String sqlSelect = "SELECT nome, email, senha_hash FROM usuario WHERE email = ?";
+        String sqlSelect = "SELECT nome, email, senha_hash, lastModified FROM usuario WHERE email = ?";
         PreparedStatement stm = null;
         ResultSet rs = null;
 
@@ -64,6 +64,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 usuario = instantiateUsuario(rs);
                 usuario.setNotas(readNotas(email));
                 usuario.setFaltas(readFaltas(email));
+                usuario.readLastModified(rs.getTimestamp(4));
             }
 
             return usuario;
@@ -158,11 +159,32 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void update(Usuario usuario) {
 
-        deleteFaltas(usuario.getEmail());
-        createFaltas(usuario);
+        String sqlUpdate = "UPDATE usuario SET lastModified = ? WHERE email = ?";
+        PreparedStatement stm = null;
+        String email = usuario.getEmail();
 
-        deleteNotas(usuario.getEmail());
-        createNotas(usuario);
+        try{
+
+            stm = conn.prepareStatement(sqlUpdate);
+            stm.setTimestamp(1, usuario.getLastModified());
+            stm.setString(2, usuario.getEmail());
+            stm.executeUpdate();
+
+            deleteFaltas(usuario.getEmail());
+            createFaltas(usuario);
+
+            deleteNotas(usuario.getEmail());
+            createNotas(usuario);
+
+        } catch (SQLException e) {
+
+            throw new DBException(e.getMessage());
+
+        } finally {
+
+            DB.closeStatement(stm);
+
+        }
 
     }
 

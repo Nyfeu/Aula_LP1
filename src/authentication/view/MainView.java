@@ -17,7 +17,7 @@ public class MainView extends JFrame {
     JTable table;
     JScrollPane bar;
     DefaultTableModel tableModel;
-    String[] column = {"N1", "N2", "N3", "N4", "Faltas"};
+    String[] column = {"N1", "N2", "N3", "N4", "Faltas", "Modificado"};
 
     public MainView() {
         super("Registro Aluno");
@@ -28,7 +28,7 @@ public class MainView extends JFrame {
         background.setLayout(new GridLayout(1, 1));
 
         ArrayList<Float> notas = Authenticator.getAuthenticatedUser().getNotas();
-        String[] dataString = new String[5];
+        String[] dataString = new String[6];
 
         for (int i = 0; i < notas.size(); i++) {
             dataString[i] = String.format("%.2f", notas.get(i));
@@ -39,6 +39,8 @@ public class MainView extends JFrame {
             dataString[4] = faltas.toString();
         }
 
+        dataString[5] = Authenticator.getAuthenticatedUser().getLastModified().toString();
+
         tableModel = new DefaultTableModel(new String[][]{dataString}, column);
         table = new JTable(tableModel);
 
@@ -47,7 +49,7 @@ public class MainView extends JFrame {
         getContentPane().add(background);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500, 125);
+        setSize(900, 125);
         setVisible(true);
 
         tableModel.addTableModelListener(e -> {
@@ -60,9 +62,11 @@ public class MainView extends JFrame {
                 Usuario usuario = Authenticator.getAuthenticatedUser();
                 usuario.setNotas(notasAtualizadas);
                 usuario.setFaltas(Integer.parseInt((String) tableModel.getValueAt(0, 4)));
+                usuario.setLastModified();
 
                 UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
                 usuarioDao.update(usuario);
+
             }
         });
     }

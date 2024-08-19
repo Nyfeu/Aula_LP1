@@ -1,5 +1,6 @@
 package authentication.model.entities;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Usuario {
@@ -8,14 +9,16 @@ public class Usuario {
     private String senha;
     private Integer faltas;
     private ArrayList<Float> notas;
+    private Timestamp lastModified;
 
-    public Usuario(){}
+    public Usuario() {}
 
     public Usuario(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.notas = new ArrayList<>();
+        this.lastModified = new Timestamp(System.currentTimeMillis());
     }
 
     public String getNome() {
@@ -58,12 +61,28 @@ public class Usuario {
         this.faltas = faltas;
     }
 
+    public void setLastModified() {
+        this.lastModified = new Timestamp(System.currentTimeMillis());
+    }
+
+    public void readLastModified(Timestamp timestamp) {
+        this.lastModified = timestamp;
+    }
+
+    public Timestamp getLastModified() {
+        if (lastModified == null) {
+            lastModified = new Timestamp(System.currentTimeMillis());
+        }
+        return lastModified;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
                 "nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
-                ", senha='" + senha + '}';
+                ", senha='" + senha + '\'' +
+                ", lastModified='" + lastModified + '\'' +
+                '}';
     }
-
 }

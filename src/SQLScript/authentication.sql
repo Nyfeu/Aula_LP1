@@ -6,6 +6,7 @@ create table usuario(
     nome VARCHAR(60) NOT NULL,
     email VARCHAR(60) NOT NULL,
     senha_hash VARCHAR(128) NOT NULL,
+    lastModified TIMESTAMP,
     primary key(email)
 );
 
