@@ -9,6 +9,7 @@ import java.awt.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class Authenticator {
 
@@ -79,6 +80,12 @@ public class Authenticator {
             Usuario usuario = new Usuario(nome, email, encodedPassword);
 
             UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+
+            ArrayList<Float> notas = new ArrayList<>();
+            for(int i = 0; i < 4; i++) notas.add(0.0F);
+            usuario.setNotas(notas);
+
+            usuario.setFaltas(0);
 
             usuarioDao.create(usuario);
 
