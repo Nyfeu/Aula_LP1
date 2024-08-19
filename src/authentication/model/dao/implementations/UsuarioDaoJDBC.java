@@ -158,16 +158,102 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void update(Usuario usuario) {
 
-        String sqlUpdate = "UPDATE usuario SET nome = ?, senha_hash = ? WHERE email = ?";
+        deleteFaltas(usuario.getEmail());
+        createFaltas(usuario);
+
+        deleteNotas(usuario.getEmail());
+        createNotas(usuario);
+
+    }
+
+    private void createFaltas(Usuario usuario) {
+
+        String sqlInsert = "INSERT INTO faltas(email, quantidade) VALUES(?,?)";
         PreparedStatement stm = null;
         String email = usuario.getEmail();
 
         try{
 
-            stm = conn.prepareStatement(sqlUpdate);
-            stm.setString(1, usuario.getNome());
-            stm.setString(2, usuario.getSenha());
-            stm.setString(3, email);
+            stm = conn.prepareStatement(sqlInsert);
+            stm.setString(1, email);
+            stm.setInt(2, usuario.getFaltas());
+            stm.execute();
+
+        } catch (SQLException e) {
+
+            throw new DBException(e.getMessage());
+
+        } finally {
+
+            DB.closeStatement(stm);
+
+        }
+
+
+    }
+
+    private void createNotas(Usuario usuario) {
+
+        String sqlInsert = "INSERT INTO notas(email, nota) VALUES(?,?)";
+        PreparedStatement stm = null;
+        String email = usuario.getEmail();
+
+        try{
+
+            for (float nota : usuario.getNotas()) {
+
+                stm = conn.prepareStatement(sqlInsert);
+                stm.setString(1, email);
+                stm.setFloat(2, nota);
+                stm.execute();
+
+            }
+
+        } catch (SQLException e) {
+
+            throw new DBException(e.getMessage());
+
+        } finally {
+
+            DB.closeStatement(stm);
+
+        }
+
+
+    }
+
+    private void deleteFaltas(String email) {
+
+        String sqlExcluir = "DELETE FROM faltas WHERE email = ?";
+        PreparedStatement stm = null;
+
+        try{
+
+            stm = conn.prepareStatement(sqlExcluir);
+            stm.setString(1, email);
+            stm.execute();
+
+        } catch (SQLException e) {
+
+            throw new DBException(e.getMessage());
+
+        } finally {
+
+            DB.closeStatement(stm);
+
+        }
+
+    }
+
+    private void deleteNotas(String email) {
+
+        String sqlExcluir = "DELETE FROM notas WHERE email = ?";
+        PreparedStatement stm = null;
+
+        try{
+
+            stm = conn.prepareStatement(sqlExcluir);
+            stm.setString(1, email);
             stm.execute();
 
         } catch (SQLException e) {
